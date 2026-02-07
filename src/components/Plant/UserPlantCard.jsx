@@ -1,28 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userPlantAPI } from '../../services/api';
 
-const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant }) => {
+const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant, refreshPlant }) => { // Добавил refreshPlant в пропсы
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [showConfirm, setShowConfirm] = useState(false);
+    const [localPlant, setLocalPlant] = useState(null);
+    const [justWatered, setJustWatered] = useState(false); // Флаг что только что полили
     const navigate = useNavigate();
 
-    // Функция для получения количества дней до полива
+    // Инициализируем localPlant при получении пропса
+    useEffect(() => {
+        if (plant && !localPlant) {
+            setLocalPlant(plant);
+        }
+    }, [plant]);
+
+    const currentPlant = localPlant || plant;
+
     const getDaysUntilWater = () => {
-        if (!plant || plant.days_until_water === undefined || plant.days_until_water === null) {
+        if (!currentPlant || currentPlant.days_until_water === undefined || currentPlant.days_until_water === null) {
             return null;
         }
-        return plant.days_until_water;
+        return currentPlant.days_until_water;
     };
 
-    // Функция для определения, нужно ли поливать растение
-    const needsWatering = () => {
-        const daysUntilWater = getDaysUntilWater();
-        return daysUntilWater !== null && daysUntilWater <= 0;
-    };
-
-    // Функция для получения информации о поливе на основе days_until_water
     const getWateringInfo = () => {
         const daysUntilWater = getDaysUntilWater();
 
@@ -35,17 +38,34 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant }) => {
             };
         }
 
-        if (daysUntilWater <= 0) {
+        // Если только что полили, показываем особый статус
+        if (justWatered && daysUntilWater === 0) {
+            return {
+                text: 'Полито только что!',
+                color: '#2ed573',
+                icon: '✅',
+                status: 'watered_now'
+            };
+        }
+
+        if (daysUntilWater === 0) {
+            return {
+                text: 'Требуется полив сегодня!',
+                color: '#ff4757',
+                icon: '⚠️',
+                status: 'today'
+            };
+        }
+
+        if (daysUntilWater < 0) {
             const overdueDays = Math.abs(daysUntilWater);
             return {
-                text: overdueDays === 0
-                    ? 'Требуется полив сегодня!'
-                    : `Требуется полив! (просрочено на ${overdueDays} дн.)`,
+                text: `Требуется полив! (просрочено на ${overdueDays} дн.)`,
                 color: '#ff4757',
                 icon: '⚠️',
                 status: 'overdue'
             };
-        } else if (daysUntilWater <= 1) {
+        } else if (daysUntilWater === 1) {
             return {
                 text: 'Полить завтра',
                 color: '#ffa502',
@@ -69,21 +89,32 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant }) => {
         }
     };
 
-    // Функция для форматирования даты последнего полива
     const getLastWateredText = () => {
-        if (!plant || !plant.last_watered_at) {
+        if (!currentPlant || !currentPlant.last_watered_at) {
             return 'Никогда не поливалось';
         }
 
         try {
-            const lastWatered = new Date(plant.last_watered_at);
+            const lastWatered = new Date(currentPlant.last_watered_at);
             if (isNaN(lastWatered.getTime())) {
                 return 'Дата не определена';
             }
 
             const now = new Date();
             const diffTime = now - lastWatered;
+            const diffMinutes = Math.floor(diffTime / (1000 * 60));
+            const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            // Только что (менее 5 минут)
+            if (diffMinutes < 5) {
+                return 'Только что';
+            }
+
+            // Недавно (менее часа)
+            if (diffMinutes < 60) {
+                return `${diffMinutes} минут назад`;
+            }
 
             // Сегодня
             if (lastWatered.toDateString() === now.toDateString()) {
@@ -125,12 +156,15 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant }) => {
         }
     };
 
-    // Функция для получения даты следующего полива
     const getNextWateringText = () => {
         const daysUntilWater = getDaysUntilWater();
 
         if (daysUntilWater === null) {
             return 'Не определено';
+        }
+
+        if (justWatered && daysUntilWater === 0) {
+            return 'Обновляется...';
         }
 
         if (daysUntilWater <= 0) {
@@ -159,17 +193,15 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant }) => {
         });
     };
 
-    // Функция для получения интервала полива из plant_library (если есть)
     const getWateringInterval = () => {
-        if (plant && plant.watering_interval) {
-            return plant.watering_interval;
+        if (currentPlant && currentPlant.watering_interval) {
+            return currentPlant.watering_interval;
         }
 
-        // Если нет данных, можно рассчитать на основе days_until_water и last_watered_at
         const daysUntilWater = getDaysUntilWater();
-        if (daysUntilWater !== null && plant && plant.last_watered_at) {
+        if (daysUntilWater !== null && currentPlant && currentPlant.last_watered_at) {
             try {
-                const lastWatered = new Date(plant.last_watered_at);
+                const lastWatered = new Date(currentPlant.last_watered_at);
                 const now = new Date();
                 const daysSinceWatered = Math.floor((now - lastWatered) / (1000 * 60 * 60 * 24));
                 return daysSinceWatered + daysUntilWater;
@@ -184,30 +216,60 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant }) => {
     const handleWaterPlant = async () => {
         setLoading(true);
         setError('');
+        setJustWatered(true); // Устанавливаем флаг что только что полили
+
         try {
-            await userPlantAPI.waterPlant(plant.id);
+            await userPlantAPI.waterPlant(currentPlant.id);
+
+            // Оптимистичное обновление - показываем "Полито только что!"
+            const now = new Date();
+            const updatedPlant = {
+                ...currentPlant,
+                last_watered_at: now.toISOString(),
+                days_until_water: 0, // Показываем 0 дней до полива
+            };
+
+            setLocalPlant(updatedPlant);
+
+            // Уведомляем родительский компонент
             if (onWaterPlant) {
-                onWaterPlant(plant.id);
+                onWaterPlant(currentPlant.id, updatedPlant);
             }
+
+            // Через секунду запрашиваем свежие данные
+            if (refreshPlant) {
+                setTimeout(() => {
+                    refreshPlant();
+                    // Сбрасываем флаг "только что полили" после обновления
+                    setTimeout(() => {
+                        setJustWatered(false);
+                    }, 500);
+                }, 1000);
+            } else {
+                // Если нет функции обновления, просто сбрасываем флаг через 3 секунды
+                setTimeout(() => {
+                    setJustWatered(false);
+                }, 3000);
+            }
+
         } catch (err) {
             setError(err.response?.data?.message || 'Ошибка при поливе');
-        } finally {
+            setJustWatered(false); // Сбрасываем флаг при ошибке
             setLoading(false);
         }
     };
 
     const handleRemovePlant = async () => {
-        if (!window.confirm(`Удалить "${plant.custom_name || plant.name}" из коллекции?`)) {
+        if (!window.confirm(`Удалить "${currentPlant.custom_name || currentPlant.name}" из коллекции?`)) {
             return;
         }
 
         setLoading(true);
         setError('');
         try {
-            // Эмуляция удаления, пока нет эндпоинта
             await new Promise(resolve => setTimeout(resolve, 500));
             if (onRemovePlant) {
-                onRemovePlant(plant.id);
+                onRemovePlant(currentPlant.id);
             }
         } catch (err) {
             setError('Ошибка при удалении растения');
@@ -218,23 +280,24 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant }) => {
     };
 
     const handleViewDetails = () => {
-        if (plant && plant.plant_library_id) {
-            navigate(`/plants/${plant.plant_library_id}`);
+        if (currentPlant && currentPlant.plant_library_id) {
+            navigate(`/plants/${currentPlant.plant_library_id}`);
         }
     };
 
     const wateringInfo = getWateringInfo();
-    const isNeedsWatering = needsWatering();
     const daysUntilWater = getDaysUntilWater();
+    const isNeedsWatering = daysUntilWater !== null && daysUntilWater <= 0 && !justWatered;
 
     return (
-        <div className={`user-plant-card ${isNeedsWatering ? 'needs-watering' : ''}`}>
+        <div className={`user-plant-card ${isNeedsWatering ? 'needs-watering' : ''} ${justWatered ? 'just-watered' : ''}`}>
             <div className="plant-card-header">
-                {wateringInfo.icon && (
-                    <div className="watering-icon">{wateringInfo.icon}</div>
-                )}
-                {isNeedsWatering && (
+                <div className="watering-icon">{wateringInfo.icon}</div>
+                {isNeedsWatering && !justWatered && (
                     <div className="watering-alert">⚠️ Требуется полив!</div>
+                )}
+                {justWatered && (
+                    <div className="watering-success">✅ Полито!</div>
                 )}
                 <div className="plant-card-actions">
                     <button
@@ -255,10 +318,10 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant }) => {
             </div>
 
             <div className="plant-image-container">
-                {plant && plant.image_url ? (
+                {currentPlant && currentPlant.image_url ? (
                     <img
-                        src={plant.image_url}
-                        alt={plant.custom_name || plant.name || 'Растение'}
+                        src={currentPlant.image_url}
+                        alt={currentPlant.custom_name || currentPlant.name || 'Растение'}
                         className="plant-image"
                         onClick={handleViewDetails}
                         onError={(e) => {
@@ -274,8 +337,11 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant }) => {
                         🌿
                     </div>
                 )}
-                {isNeedsWatering && (
+                {isNeedsWatering && !justWatered && (
                     <div className="watering-indicator">💧</div>
+                )}
+                {justWatered && (
+                    <div className="watering-success-indicator">✅</div>
                 )}
             </div>
 
@@ -285,12 +351,12 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant }) => {
                     onClick={handleViewDetails}
                     style={{ cursor: 'pointer' }}
                 >
-                    {plant ? (plant.custom_name || plant.name || 'Без названия') : 'Растение'}
+                    {currentPlant ? (currentPlant.custom_name || currentPlant.name || 'Без названия') : 'Растение'}
                 </h3>
 
-                {plant && plant.custom_name && plant.name && (
+                {currentPlant && currentPlant.custom_name && currentPlant.name && (
                     <p className="plant-original-name">
-                        ({plant.name})
+                        ({currentPlant.name})
                     </p>
                 )}
 
@@ -300,10 +366,11 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant }) => {
                     </div>
 
                     {daysUntilWater !== null && (
-                        <div className="days-counter">
+                        <div className="days-counter" data-status={wateringInfo.status}>
                             <div className="days-number">{Math.abs(daysUntilWater)}</div>
                             <div className="days-label">
-                                {daysUntilWater >= 0 ? 'дней до полива' : 'дней просрочено'}
+                                {justWatered ? 'обновляется...' :
+                                    daysUntilWater >= 0 ? 'дней до полива' : 'дней просрочено'}
                             </div>
                         </div>
                     )}
@@ -324,22 +391,22 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant }) => {
                     </div>
                 </div>
 
-                {plant && (plant.light_preference || plant.care_difficulty) && (
+                {currentPlant && (currentPlant.light_preference || currentPlant.care_difficulty) && (
                     <div className="plant-properties">
-                        {plant.light_preference && (
+                        {currentPlant.light_preference && (
                             <div className="property">
                                 <span className="property-icon">💡</span>
                                 <span className="property-text">
-                  {plant.light_preference === 'sun' ? 'Солнце' : 'Тень'}
+                  {currentPlant.light_preference === 'sun' ? 'Солнце' : 'Тень'}
                 </span>
                             </div>
                         )}
-                        {plant.care_difficulty && (
+                        {currentPlant.care_difficulty && (
                             <div className="property">
                                 <span className="property-icon">⚡</span>
                                 <span className="property-text">
-                  {plant.care_difficulty === 'easy' ? 'Легко' :
-                      plant.care_difficulty === 'medium' ? 'Средне' : 'Сложно'}
+                  {currentPlant.care_difficulty === 'easy' ? 'Легко' :
+                      currentPlant.care_difficulty === 'medium' ? 'Средне' : 'Сложно'}
                 </span>
                             </div>
                         )}
@@ -349,11 +416,13 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant }) => {
                 <div className="plant-card-footer">
                     <button
                         onClick={handleWaterPlant}
-                        disabled={loading}
-                        className={`water-button ${isNeedsWatering ? 'urgent' : ''}`}
+                        disabled={loading || justWatered}
+                        className={`water-button ${isNeedsWatering ? 'urgent' : ''} ${justWatered ? 'watered' : ''}`}
                     >
-                        {loading ? '⏳ Поливаем...' : '💦 Полить сейчас'}
-                        {daysUntilWater !== null && daysUntilWater > 0 && (
+                        {loading ? '⏳ Поливаем...' :
+                            justWatered ? '✅ Полито!' :
+                                '💦 Полить сейчас'}
+                        {daysUntilWater !== null && daysUntilWater > 0 && !justWatered && (
                             <span className="button-days">({daysUntilWater} дн.)</span>
                         )}
                     </button>
@@ -382,9 +451,9 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant }) => {
 
                 {error && <div className="error-message">{error}</div>}
 
-                {plant && plant.created_at && (
+                {currentPlant && currentPlant.created_at && (
                     <div className="plant-added-date">
-                        Добавлено: {new Date(plant.created_at).toLocaleDateString('ru-RU')}
+                        Добавлено: {new Date(currentPlant.created_at).toLocaleDateString('ru-RU')}
                     </div>
                 )}
             </div>

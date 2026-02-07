@@ -86,7 +86,7 @@ const UserPlants = () => {
         }, 1000);
     };
 
-    // Новая функция для обновления растения
+    // Функция для обновления растения
     const handleUpdatePlant = (plantId, updatedPlant) => {
         setPlants(prevPlants =>
             prevPlants.map(plant => {
@@ -105,12 +105,6 @@ const UserPlants = () => {
     const handleRemovePlant = (plantId) => {
         // Оптимистичное обновление - удаляем сразу из состояния
         setPlants(prevPlants => prevPlants.filter(plant => plant.id !== plantId));
-
-        // Показываем уведомление об успешном удалении (опционально)
-        setTimeout(() => {
-            // Можно добавить toast-уведомление
-            console.log('Растение удалено');
-        }, 500);
     };
 
     const refreshSinglePlant = async (plantId) => {
@@ -176,93 +170,275 @@ const UserPlants = () => {
 
     return (
         <div className="user-plants">
-            <div className="page-header">
-                <h1>Мои растения</h1>
-                <div className="plants-stats">
-                    <div className="stat-item">
-                        <span className="stat-number">{plants.length}</span>
-                        <span className="stat-label">Всего растений</span>
-                    </div>
-                    <div className="stat-item">
-                        <span className="stat-number urgent">{plantsNeedingWater.length}</span>
-                        <span className="stat-label">Требуют полива</span>
+            {/* Показываем заголовок и статистику ТОЛЬКО если есть растения */}
+            {plants.length > 0 && (
+                <div className="page-header">
+                    <h1>Мои растения</h1>
+                    <div className="plants-stats">
+                        <div className="stat-item">
+                            <span className="stat-number">{plants.length}</span>
+                            <span className="stat-label">Всего растений</span>
+                        </div>
+                        <div className="stat-item">
+                            <span className="stat-number urgent">{plantsNeedingWater.length}</span>
+                            <span className="stat-label">Требуют полива</span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             {plants.length === 0 ? (
                 <div className="empty-collection">
                     <div className="empty-collection-illustration">
                         <div className="illustration-container">
-                            {/* Красивая SVG иллюстрация вместо эмодзи */}
-                            <svg className="plant-illustration" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                                <defs>
-                                    <linearGradient id="plantGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                                        <stop offset="0%" style={{stopColor: '#2d5a27', stopOpacity: 1}} />
-                                        <stop offset="100%" style={{stopColor: '#3d8232', stopOpacity: 1}} />
-                                    </linearGradient>
-                                    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                                        <feDropShadow dx="0" dy="4" stdDeviation="6" floodColor="rgba(45, 90, 39, 0.2)"/>
-                                    </filter>
-                                </defs>
+                            <div className="empty-collection-image">
+                                <svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                                    <defs>
+                                        {/* Градиенты для цветка */}
+                                        <linearGradient id="petalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style={{stopColor: '#FF6BCB', stopOpacity: 1}} />
+                                            <stop offset="100%" style={{stopColor: '#FF3366', stopOpacity: 1}} />
+                                        </linearGradient>
 
-                                {/* Горшок */}
-                                <rect x="70" y="140" width="60" height="30" rx="5" fill="#8B4513" filter="url(#shadow)"/>
-                                <rect x="60" y="130" width="80" height="10" rx="3" fill="#A0522D"/>
+                                        <linearGradient id="centerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style={{stopColor: '#FFD93D', stopOpacity: 1}} />
+                                            <stop offset="100%" style={{stopColor: '#FF6B6B', stopOpacity: 1}} />
+                                        </linearGradient>
 
-                                {/* Почва */}
-                                <ellipse cx="100" cy="130" rx="40" ry="10" fill="#8B7355"/>
+                                        <linearGradient id="leafGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style={{stopColor: '#51CF66', stopOpacity: 1}} />
+                                            <stop offset="100%" style={{stopColor: '#2B8A3E', stopOpacity: 1}} />
+                                        </linearGradient>
 
-                                {/* Стебель */}
-                                <rect x="97" y="80" width="6" height="50" fill="#2d5a27"/>
+                                        <linearGradient id="potGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style={{stopColor: '#795548', stopOpacity: 1}} />
+                                            <stop offset="100%" style={{stopColor: '#5D4037', stopOpacity: 1}} />
+                                        </linearGradient>
 
-                                {/* Листья */}
-                                <ellipse cx="70" cy="90" rx="20" ry="15" fill="url(#plantGradient)" transform="rotate(-30 70 90)"/>
-                                <ellipse cx="130" cy="90" rx="20" ry="15" fill="url(#plantGradient)" transform="rotate(30 130 90)"/>
-                                <ellipse cx="100" cy="70" rx="25" ry="20" fill="url(#plantGradient)"/>
+                                        <linearGradient id="soilGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style={{stopColor: '#8B6B4B', stopOpacity: 1}} />
+                                            <stop offset="100%" style={{stopColor: '#6B4F35', stopOpacity: 1}} />
+                                        </linearGradient>
 
-                                {/* Цветок */}
-                                <circle cx="100" cy="60" r="8" fill="#FFD700"/>
-                                <ellipse cx="100" cy="60" rx="15" ry="8" fill="#FF6B6B" transform="rotate(0 100 60)"/>
-                                <ellipse cx="100" cy="60" rx="15" ry="8" fill="#FF6B6B" transform="rotate(45 100 60)"/>
-                                <ellipse cx="100" cy="60" rx="15" ry="8" fill="#FF6B6B" transform="rotate(90 100 60)"/>
-                                <ellipse cx="100" cy="60" rx="15" ry="8" fill="#FF6B6B" transform="rotate(135 100 60)"/>
+                                        <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                                            <feDropShadow dx="0" dy="5" stdDeviation="8" floodColor="rgba(0,0,0,0.2)"/>
+                                        </filter>
 
-                                {/* Капельки воды (анимация) */}
-                                <circle cx="85" cy="120" r="3" fill="#4cc9f0">
-                                    <animate attributeName="cy" from="120" to="115" dur="1.5s" repeatCount="indefinite"/>
-                                    <animate attributeName="opacity" from="1" to="0.3" dur="1.5s" repeatCount="indefinite"/>
-                                </circle>
-                                <circle cx="115" cy="125" r="2.5" fill="#4cc9f0">
-                                    <animate attributeName="cy" from="125" to="120" dur="1.8s" repeatCount="indefinite" begin="0.3s"/>
-                                    <animate attributeName="opacity" from="1" to="0.3" dur="1.8s" repeatCount="indefinite" begin="0.3s"/>
-                                </circle>
-                            </svg>
+                                        <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+                                            <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+                                            <feFlood floodColor="#FFD700" floodOpacity="0.3" result="glow"/>
+                                            <feComposite in="glow" in2="blur" operator="in" result="softGlow"/>
+                                            <feMerge>
+                                                <feMergeNode in="softGlow"/>
+                                                <feMergeNode in="SourceGraphic"/>
+                                            </feMerge>
+                                        </filter>
+                                    </defs>
+
+                                    {/* Горшок с тенью */}
+                                    <g filter="url(#shadow)">
+                                        {/* Основная часть горшка */}
+                                        <path d="M80,200 L100,180 L200,180 L220,200 Z" fill="url(#potGradient)" />
+
+                                        {/* Верхняя часть горшка */}
+                                        <rect x="90" y="170" width="120" height="10" rx="5" fill="#6D4C41" />
+
+                                        {/* Дно горшка */}
+                                        <rect x="100" y="200" width="100" height="10" rx="3" fill="#4E342E" />
+
+                                        {/* Декоративные линии на горшке */}
+                                        <line x1="100" y1="185" x2="200" y2="185" stroke="#8D6E63" strokeWidth="2" />
+                                        <line x1="105" y1="190" x2="195" y2="190" stroke="#A1887F" strokeWidth="1.5" />
+                                    </g>
+
+
+                                    {/* Стебель */}
+                                    <rect x="147" y="100" width="6" height="70" fill="#388E3C" />
+
+                                    {/* Листья */}
+                                    <g filter="url(#shadow)">
+                                        {/* Левый лист */}
+                                        <ellipse cx="120" cy="130" rx="20" ry="12" fill="url(#leafGradient)" transform="rotate(-25 120 130)" />
+                                        <path d="M120,130 Q110,135 115,140 Q120,145 125,140 Q130,135 120,130" fill="#1B5E20" opacity="0.3" />
+
+                                        {/* Правый лист */}
+                                        <ellipse cx="180" cy="130" rx="20" ry="12" fill="url(#leafGradient)" transform="rotate(25 180 130)" />
+                                        <path d="M180,130 Q190,135 185,140 Q180,145 175,140 Q170,135 180,130" fill="#1B5E20" opacity="0.3" />
+
+                                        {/* Верхний лист */}
+                                        <ellipse cx="150" cy="120" rx="15" ry="8" fill="url(#leafGradient)" transform="rotate(10 150 120)" />
+                                    </g>
+
+                                    {/* Цветок с анимацией свечения */}
+                                    <g filter="url(#softGlow)">
+                                        {/* Лепестки цветка */}
+                                        <circle cx="150" cy="90" r="25" fill="url(#petalGradient)" />
+
+                                        {/* Контур лепестков */}
+                                        <circle cx="150" cy="90" r="25" fill="none" stroke="#FF4081" strokeWidth="1" />
+
+                                        {/* Сердцевина цветка */}
+                                        <circle cx="150" cy="90" r="12" fill="url(#centerGradient)" />
+
+                                        {/* Тычинки */}
+                                        <g>
+                                            {Array.from({ length: 8 }).map((_, i) => {
+                                                const angle = (i * 45) * Math.PI / 180;
+                                                const x1 = 150 + Math.cos(angle) * 12;
+                                                const y1 = 90 + Math.sin(angle) * 12;
+                                                const x2 = 150 + Math.cos(angle) * 20;
+                                                const y2 = 90 + Math.sin(angle) * 20;
+
+                                                return (
+                                                    <g key={i}>
+                                                        <line
+                                                            x1={x1}
+                                                            y1={y1}
+                                                            x2={x2}
+                                                            y2={y2}
+                                                            stroke="#FFD700"
+                                                            strokeWidth="2"
+                                                            strokeLinecap="round"
+                                                        />
+                                                        <circle
+                                                            cx={x2}
+                                                            cy={y2}
+                                                            r="3"
+                                                            fill="#FF9800"
+                                                        >
+                                                            <animate
+                                                                attributeName="r"
+                                                                values="3;4;3"
+                                                                dur="1.5s"
+                                                                begin={`${i * 0.1}s`}
+                                                                repeatCount="indefinite"
+                                                            />
+                                                        </circle>
+                                                    </g>
+                                                );
+                                            })}
+                                        </g>
+
+                                        {/* Блестки на лепестках */}
+                                        {Array.from({ length: 5 }).map((_, i) => {
+                                            const angle = (i * 72) * Math.PI / 180;
+                                            const distance = 15 + (i % 2) * 5;
+                                            const x = 150 + Math.cos(angle) * distance;
+                                            const y = 90 + Math.sin(angle) * distance;
+
+                                            return (
+                                                <circle
+                                                    key={i}
+                                                    cx={x}
+                                                    cy={y}
+                                                    r="2"
+                                                    fill="#FFFFFF"
+                                                    opacity="0.8"
+                                                >
+                                                    <animate
+                                                        attributeName="opacity"
+                                                        values="0.3;0.8;0.3"
+                                                        dur="2s"
+                                                        begin={`${i * 0.3}s`}
+                                                        repeatCount="indefinite"
+                                                    />
+                                                </circle>
+                                            );
+                                        })}
+                                    </g>
+
+                                    {/* Капельки росы с анимацией */}
+                                    <g>
+                                        <circle cx="130" cy="150" r="2.5" fill="#4FC3F7">
+                                            <animate
+                                                attributeName="cy"
+                                                values="150;148;150"
+                                                dur="2s"
+                                                repeatCount="indefinite"
+                                            />
+                                            <animate
+                                                attributeName="opacity"
+                                                values="0.5;1;0.5"
+                                                dur="2s"
+                                                repeatCount="indefinite"
+                                            />
+                                        </circle>
+
+                                        <circle cx="170" cy="155" r="2" fill="#4FC3F7">
+                                            <animate
+                                                attributeName="cy"
+                                                values="155;153;155"
+                                                dur="2.5s"
+                                                begin="0.5s"
+                                                repeatCount="indefinite"
+                                            />
+                                            <animate
+                                                attributeName="opacity"
+                                                values="0.5;1;0.5"
+                                                dur="2.5s"
+                                                begin="0.5s"
+                                                repeatCount="indefinite"
+                                            />
+                                        </circle>
+
+                                        <circle cx="145" cy="160" r="1.5" fill="#4FC3F7">
+                                            <animate
+                                                attributeName="cy"
+                                                values="160;158;160"
+                                                dur="3s"
+                                                begin="1s"
+                                                repeatCount="indefinite"
+                                            />
+                                            <animate
+                                                attributeName="opacity"
+                                                values="0.5;1;0.5"
+                                                dur="3s"
+                                                begin="1s"
+                                                repeatCount="indefinite"
+                                            />
+                                        </circle>
+                                    </g>
+
+                                    {/* Декоративные элементы вокруг */}
+                                    <circle cx="80" cy="100" r="8" fill="#FFB74D" opacity="0.3">
+                                        <animate
+                                            attributeName="r"
+                                            values="8;10;8"
+                                            dur="3s"
+                                            repeatCount="indefinite"
+                                        />
+                                    </circle>
+
+                                    <circle cx="220" cy="120" r="6" fill="#BA68C8" opacity="0.3">
+                                        <animate
+                                            attributeName="r"
+                                            values="6;8;6"
+                                            dur="4s"
+                                            begin="1s"
+                                            repeatCount="indefinite"
+                                        />
+                                    </circle>
+                                </svg>
+                            </div>
                         </div>
                         <div className="illustration-text">
-                            <h3>Коллекция пуста</h3>
-                            <p>Добавьте растения из библиотеки, чтобы начать за ними ухаживать</p>
+                            <h3>Коллекция растений пуста</h3>
+                            <p>Начните с добавления растений из библиотеки, и мы поможем вам за ними ухаживать</p>
                             <div className="illustration-actions">
                                 <button
                                     onClick={() => navigate('/library')}
                                     className="primary-button illustration-button"
                                 >
-                                    🌿 Перейти в библиотеку
-                                </button>
-                                <button
-                                    onClick={() => navigate('/plants')}
-                                    className="secondary-button illustration-button"
-                                >
-                                    📚 Просмотреть все растения
+                                    🌿 Перейти в библиотеку растений
                                 </button>
                             </div>
                             <div className="illustration-tips">
-                                <p className="tip-title">Советы для начала:</p>
+                                <p className="tip-title">Как начать:</p>
                                 <ul className="tips-list">
-                                    <li>🌱 Выберите растения, которые подходят вашему уровню опыта</li>
-                                    <li>💡 Обратите внимание на требования к освещению</li>
-                                    <li>💧 Учитывайте график полива при выборе растений</li>
-                                    <li>🎯 Начните с 2-3 растений и постепенно расширяйте коллекцию</li>
+                                    <li>📚 Перейдите в библиотеку растений</li>
+                                    <li>🌱 Выберите понравившиеся растения</li>
+                                    <li>➕ Нажмите "Добавить в коллекцию"</li>
+                                    <li>💧 Система будет напоминать о поливе</li>
                                 </ul>
                             </div>
                         </div>

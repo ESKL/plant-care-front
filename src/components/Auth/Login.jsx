@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { userAPI } from '../../services/api';
 import authService from '../../services/auth';
 
-const Login = () => {
+// Изменим пропсы компонента
+const Login = ({ onLoginSuccess }) => {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -27,7 +28,13 @@ const Login = () => {
         try {
             const response = await userAPI.login(formData);
             authService.login(response.data.token);
-            navigate('/my-plants');
+
+            // Вызываем callback для обновления состояния аутентификации в App.jsx
+            if (onLoginSuccess) {
+                onLoginSuccess();
+            }
+
+            navigate('/library');
         } catch (err) {
             setError(err.response?.data?.message || 'Ошибка входа');
         } finally {

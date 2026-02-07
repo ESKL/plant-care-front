@@ -3,7 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { userAPI } from '../../services/api';
 import authService from '../../services/auth';
 
-const Register = () => {
+// Добавляем пропс onRegisterSuccess
+const Register = ({ onRegisterSuccess }) => {
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -43,10 +44,13 @@ const Register = () => {
 
             setSuccess(true);
 
-            // Перенаправляем сразу в библиотеку через 1 секунду
-            setTimeout(() => {
-                navigate('/library');
-            }, 1000);
+            // Вызываем callback для обновления состояния в App.jsx
+            if (onRegisterSuccess) {
+                onRegisterSuccess();
+            }
+
+            // Убираем задержку и сразу перенаправляем
+            navigate('/library');
 
         } catch (err) {
             // Пробуем понять причину ошибки

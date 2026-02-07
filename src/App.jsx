@@ -29,12 +29,27 @@ function App() {
     useEffect(() => {
         // Имитация загрузки приложения
         const timer = setTimeout(() => {
-            setIsAuthenticated(authService.isAuthenticated());
+            checkAuth();
             setLoading(false);
         }, 500);
 
         return () => clearTimeout(timer);
     }, []);
+
+    // Функция для проверки аутентификации
+    const checkAuth = () => {
+        setIsAuthenticated(authService.isAuthenticated());
+    };
+
+    // Функция для обновления состояния после входа
+    const handleLoginSuccess = () => {
+        checkAuth();
+    };
+
+    // Функция для обновления состояния после регистрации
+    const handleRegisterSuccess = () => {
+        checkAuth();
+    };
 
     const handleLogout = () => {
         authService.logout();
@@ -53,15 +68,15 @@ function App() {
                     <Routes>
                         {/* Публичные маршруты */}
                         <Route path="/login" element={
-                            !isAuthenticated ? <Login /> : <Navigate to="/my-plants" />
+                            !isAuthenticated ? <Login onLoginSuccess={handleLoginSuccess} /> : <Navigate to="/library" />
                         } />
                         <Route path="/register" element={
-                            !isAuthenticated ? <Register /> : <Navigate to="/my-plants" />
+                            !isAuthenticated ? <Register onRegisterSuccess={handleRegisterSuccess} /> : <Navigate to="/library" />
                         } />
 
                         {/* Перенаправление с корня */}
                         <Route path="/" element={
-                            <Navigate to={isAuthenticated ? "/my-plants" : "/login"} />
+                            <Navigate to={isAuthenticated ? "/library" : "/login"} />
                         } />
 
                         {/* Приватные маршруты */}

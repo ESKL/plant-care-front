@@ -2118,3 +2118,1553 @@ button:disabled {
 .user-plant-card.just-watered {
     animation: success-pulse 2s infinite;
 }
+
+/* Стили для модального окна редактирования */
+.plant-preview {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+    align-items: center;
+}
+
+.plant-preview-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.plant-preview-placeholder {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #f0f7ee 0%, #e0f0e0 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+}
+
+.plant-preview-info h3 {
+    margin: 0 0 0.25rem 0;
+    color: #2d5a27;
+}
+
+.plant-preview-info p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.image-preview {
+    margin-top: 0.5rem;
+}
+
+.image-preview small {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #666;
+}
+
+.preview-image {
+    max-width: 100%;
+    max-height: 150px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.preview-error {
+    color: #ff4757;
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    background: #fff5f5;
+    border-radius: 4px;
+    border: 1px solid #ffcccc;
+}
+
+.delete-warning {
+    color: #ff4757;
+    font-size: 0.9rem;
+    margin: 0.5rem 0 1rem 0;
+    font-weight: 500;
+}
+
+/* Иконки действий в карточке */
+.icon-button {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: white;
+    font-size: 1rem;
+    transition: background 0.2s;
+}
+
+.icon-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Адаптивность для модальных окон */
+@media (max-width: 768px) {
+    .plant-preview {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 1rem;
+    }
+}
+
+/* Стили для страницы управления растениями */
+.manage-plants-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.manage-plants-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.search-container {
+    display: flex;
+    flex: 1;
+    max-width: 500px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px 0 0 8px;
+    font-size: 1rem;
+}
+
+.search-button {
+    background: #2d5a27;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+}
+
+.add-button {
+    background: linear-gradient(135deg, #2d5a27 0%, #3d8232 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.refresh-button {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* Таблица управления растениями */
+.plants-management-table {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+.plants-management-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.plants-management-table th {
+    background: #2d5a27;
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.plants-management-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.plants-management-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.plant-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.thumbnail-placeholder {
+    width: 50px;
+    height: 50px;
+    background: #f0f7ee;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.plant-description-cell {
+    max-width: 300px;
+}
+
+.no-description {
+    color: #999;
+    font-style: italic;
+}
+
+/* Бейджи для свойств растений */
+.light-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.light-badge.sun {
+    background: #fff9e6;
+    color: #8b6914;
+    border: 1px solid #ffd700;
+}
+
+.light-badge.shade {
+    background: #e6f3ff;
+    color: #2c6fb7;
+    border: 1px solid #4dabf7;
+}
+
+.watering-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background: #e0f2fe;
+    color: #0369a1;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.difficulty-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.difficulty-badge.easy {
+    background: #f0f7ee;
+    color: #2d5a27;
+    border: 1px solid #cde8c8;
+}
+
+.difficulty-badge.medium {
+    background: #fff9e6;
+    color: #8b6914;
+    border: 1px solid #ffd700;
+}
+
+.difficulty-badge.hard {
+    background: #fff5f5;
+    color: #c92a2a;
+    border: 1px solid #ffa8a8;
+}
+
+/* Кнопки действий в таблице */
+.plant-actions-cell {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-button {
+    background: none;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
+}
+
+.edit-button {
+    background: rgba(45, 90, 39, 0.1);
+    color: #2d5a27;
+}
+
+.edit-button:hover {
+    background: rgba(45, 90, 39, 0.2);
+}
+
+.delete-button {
+    background: rgba(255, 71, 87, 0.1);
+    color: #ff4757;
+}
+
+.delete-button:hover {
+    background: rgba(255, 71, 87, 0.2);
+}
+
+.view-button {
+    background: rgba(108, 117, 125, 0.1);
+    color: #6c757d;
+}
+
+.view-button:hover {
+    background: rgba(108, 117, 125, 0.2);
+}
+
+/* Статистика */
+.management-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+}
+
+.stat-card .stat-number {
+    display: block;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #2d5a27;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card .stat-label {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* Модальное окно редактирования библиотеки */
+.library-edit-modal {
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.plant-info-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.plant-id-label {
+    background: #f0f7ee;
+    color: #2d5a27;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.current-image {
+    text-align: center;
+}
+
+.current-image small {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #666;
+}
+
+.current-image-preview {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.half-width {
+    flex: 1;
+}
+
+/* Модальное окно подтверждения удаления */
+.confirm-modal {
+    max-width: 500px;
+}
+
+.warning-text {
+    background: #fff5f5;
+    border: 1px solid #ffcccc;
+    color: #ff4757;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+}
+
+.delete-confirm-button {
+    background: linear-gradient(135deg, #ff4757 0%, #ff3742 100%);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+    .plants-management-table {
+        overflow-x: auto;
+    }
+
+    .plants-management-table table {
+        min-width: 1000px;
+    }
+}
+
+@media (max-width: 768px) {
+    .manage-plants-page {
+        padding: 1rem;
+    }
+
+    .manage-plants-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-container {
+        max-width: 100%;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .management-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Стили для административной панели со статистикой */
+.admin-main-stats {
+    margin-bottom: 2rem;
+}
+
+.stat-card.primary {
+    background: linear-gradient(135deg, #2d5a27 0%, #3d8232 100%);
+    color: white;
+    border-radius: 12px;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    box-shadow: 0 4px 20px rgba(45, 90, 39, 0.2);
+}
+
+.stat-card.primary .stat-icon {
+    font-size: 3rem;
+}
+
+.stat-card.primary .stat-content {
+    flex: 1;
+}
+
+.stat-card.primary .stat-number {
+    font-size: 3rem;
+    font-weight: bold;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card.primary .stat-label {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.last-updated {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    font-style: italic;
+}
+
+/* Сетка статистики */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.stat-item {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-left: 4px solid #2d5a27;
+}
+
+.stat-item[data-difficulty="easy"] {
+    border-left-color: #2ed573;
+}
+
+.stat-item[data-difficulty="medium"] {
+    border-left-color: #ffa502;
+}
+
+.stat-item[data-difficulty="hard"] {
+    border-left-color: #ff4757;
+}
+
+.stat-item[data-light="sun"] {
+    border-left-color: #ffd700;
+}
+
+.stat-item[data-light="shade"] {
+    border-left-color: #2d5a27;
+}
+
+.stat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+}
+
+.stat-title {
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.stat-numbers {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 0.75rem;
+}
+
+.stat-count {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2d5a27;
+}
+
+.stat-percent {
+    font-size: 1.25rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.stat-progress {
+    height: 6px;
+    background: #f0f0f0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+/* Статистика полива */
+.watering-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.watering-stat {
+    background: #e0f2fe;
+    border-radius: 8px;
+    padding: 1.25rem;
+    text-align: center;
+    border: 1px solid #bae6fd;
+}
+
+.watering-label {
+    color: #0369a1;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.watering-count {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #0c4a6e;
+}
+
+/* Статистика изображений */
+.image-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.image-stat {
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.image-stat.with-image {
+    background: linear-gradient(135deg, #f0f7ee 0%, #e0f0e0 100%);
+    border: 1px solid #cde8c8;
+}
+
+.image-stat.without-image {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+}
+
+.image-stat-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.image-stat-icon {
+    font-size: 2.5rem;
+}
+
+.image-stat-info {
+    flex: 1;
+}
+
+.image-stat-count {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2d5a27;
+    margin-bottom: 0.25rem;
+}
+
+.image-stat-label {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.image-stat-percent {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d5a27;
+}
+
+/* Сводная статистика */
+.summary-stats {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.summary-stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.summary-stat:last-child {
+    border-bottom: none;
+}
+
+.summary-label {
+    color: #666;
+    font-weight: 500;
+}
+
+.summary-value {
+    font-weight: 600;
+    color: #2d5a27;
+}
+
+/* Кнопка обновления статистики */
+.refresh-stats-button {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+}
+
+.refresh-stats-button:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #495057 100%);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .stat-card.primary {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+        padding: 1.5rem;
+    }
+
+    .stat-card.primary .stat-icon {
+        font-size: 2.5rem;
+    }
+
+    .stat-card.primary .stat-number {
+        font-size: 2.5rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .watering-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .image-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-stat {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .summary-value {
+        font-size: 0.9rem;
+    }
+}
+
+/* Стили для главной админ-панели */
+.summary-section {
+    margin-bottom: 2rem;
+}
+
+.summary-section h2 {
+    color: #2d5a27;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.summary-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    border-left: 4px solid #2d5a27;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+}
+
+.summary-card-icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #2d5a27 0%, #3d8232 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.summary-card-content {
+    flex: 1;
+}
+
+.summary-card-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #2d5a27;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.summary-card-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #2d5a27;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.summary-card-label {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+}
+
+.summary-card-percent {
+    color: #2d5a27;
+    font-weight: 600;
+    font-size: 0.9rem;
+    background: rgba(45, 90, 39, 0.1);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.summary-card-details {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+.stat-detail {
+    background: #f8f9fa;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Быстрые действия */
+.quick-actions-section {
+    margin-bottom: 2rem;
+}
+
+.quick-actions-section h2 {
+    color: #2d5a27;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.quick-action-button {
+    background: white;
+    border: none;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    border-left: 4px solid #2d5a27;
+}
+
+.quick-action-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+}
+
+.quick-action-button:active {
+    transform: translateY(-1px);
+}
+
+.action-icon {
+    font-size: 2rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.quick-action-button.stats-button .action-icon {
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    color: white;
+}
+
+.quick-action-button.add-button .action-icon {
+    background: linear-gradient(135deg, #2d5a27 0%, #3d8232 100%);
+    color: white;
+}
+
+.quick-action-button.manage-button .action-icon {
+    background: linear-gradient(135deg, #ffa502 0%, #ff8c00 100%);
+    color: white;
+}
+
+.quick-action-button.view-button .action-icon {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: white;
+}
+
+.quick-action-button.refresh-button .action-icon {
+    background: linear-gradient(135deg, #2ed573 0%, #27ae60 100%);
+    color: white;
+}
+
+.quick-action-button.users-button .action-icon {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: #6c757d;
+    border: 1px solid #dee2e6;
+}
+
+.action-content {
+    flex: 1;
+}
+
+.action-title {
+    font-weight: 600;
+    color: #2d5a27;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.action-description {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.quick-action-button.users-button {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.quick-action-button.users-button:hover {
+    transform: none;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+}
+
+/* Стили для полной статистики */
+.full-stats-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.stats-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.stats-header h1 {
+    color: #2d5a27;
+    margin: 1rem 0 0.5rem 0;
+}
+
+.stats-subtitle {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.back-button {
+    background: none;
+    border: none;
+    color: #2d5a27;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.back-button:hover {
+    background-color: #f0f7ee;
+}
+
+.refresh-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.refresh-stats-btn {
+    background: linear-gradient(135deg, #2d5a27 0%, #3d8232 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.refresh-stats-btn:hover {
+    background: linear-gradient(135deg, #3d8232 0%, #2d5a27 100%);
+}
+
+.stats-section {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+}
+
+.stats-section h2 {
+    color: #2d5a27;
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+    border-bottom: 2px solid #f0f7ee;
+    padding-bottom: 0.75rem;
+}
+
+/* Общая информация */
+.overview-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.overview-card {
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 10px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+}
+
+.overview-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.overview-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #2d5a27;
+    margin-bottom: 0.5rem;
+}
+
+.overview-label {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.overview-subtext {
+    color: #2d5a27;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Сложность ухода */
+.difficulty-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.difficulty-stat-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    border-left: 4px solid #2d5a27;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.difficulty-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.difficulty-icon {
+    font-size: 1.5rem;
+}
+
+.difficulty-title {
+    font-weight: 600;
+    color: #333;
+    font-size: 1.1rem;
+}
+
+.difficulty-numbers {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 0.75rem;
+}
+
+.difficulty-count {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2d5a27;
+}
+
+.difficulty-percent {
+    font-size: 1.25rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.difficulty-progress {
+    height: 8px;
+    background: #f0f0f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+/* Освещение */
+.light-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.light-stat-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    border-left: 4px solid #2d5a27;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Частота полива */
+.watering-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.watering-stat-card {
+    background: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    border: 2px solid #2d5a27;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Изображения */
+.images-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.image-stat-card {
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.image-stat-card.with-image {
+    background: linear-gradient(135deg, #f0f7ee 0%, #e0f0e0 100%);
+    border: 1px solid #cde8c8;
+}
+
+.image-stat-card.without-image {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border: 1px solid #dee2e6;
+}
+
+/* Дополнительная информация */
+.additional-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-card {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1.5rem;
+    border: 1px solid #e9ecef;
+}
+
+.info-card h3 {
+    color: #2d5a27;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.info-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+    color: #666;
+}
+
+.info-list li:last-child {
+    border-bottom: none;
+}
+
+/* Прогресс бары */
+.progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+/* Общие стили для статистических карточек */
+[class*="-stat-card"] .progress-fill {
+    height: 8px;
+    border-radius: 4px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .summary-card-details {
+        justify-content: center;
+    }
+
+    .quick-actions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .quick-action-button {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .action-icon {
+        width: 50px;
+        height: 50px;
+    }
+
+    .full-stats-page {
+        padding: 1rem;
+    }
+
+    .overview-cards,
+    .difficulty-stats,
+    .light-stats,
+    .watering-stats-grid,
+    .images-stats,
+    .additional-info {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Стили для пустой коллекции с красивой иллюстрацией */
+.empty-collection {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    margin: 2rem 0;
+    border: 2px dashed #e0f0e0;
+}
+
+.empty-collection-illustration {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.illustration-container {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+
+.plant-illustration {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 8px 16px rgba(45, 90, 39, 0.15));
+}
+
+.illustration-text {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.illustration-text h3 {
+    color: #2d5a27;
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.illustration-text p {
+    color: #666;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.illustration-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+}
+
+.illustration-button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.primary-button.illustration-button {
+    background: linear-gradient(135deg, #2d5a27 0%, #3d8232 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(45, 90, 39, 0.2);
+}
+
+.primary-button.illustration-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(45, 90, 39, 0.3);
+}
+
+.secondary-button.illustration-button {
+    background: white;
+    color: #2d5a27;
+    border: 2px solid #2d5a27;
+}
+
+.secondary-button.illustration-button:hover {
+    background: #f0f7ee;
+}
+
+.illustration-tips {
+    background: rgba(45, 90, 39, 0.05);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    text-align: left;
+}
+
+.tip-title {
+    color: #2d5a27;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tips-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tips-list li {
+    padding: 0.5rem 0;
+    color: #555;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.tips-list li:before {
+    content: "•";
+    color: #2d5a27;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* Анимация для успешной регистрации */
+.success-screen {
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.success-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    animation: bounce 1s infinite alternate;
+}
+
+@keyframes bounce {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(-10px);
+    }
+}
+
+.loading-spinner-small {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f0f7ee;
+    border-top-color: #2d5a27;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 2rem auto;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Улучшенные стили для формы регистрации */
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-header h2 {
+    color: #2d5a27;
+    margin-bottom: 0.5rem;
+}
+
+.form-subtitle {
+    color: #666;
+    font-size: 1rem;
+}
+
+.password-hint {
+    font-size: 0.85rem;
+    color: #666;
+    font-weight: normal;
+    margin-left: 0.5rem;
+}
+
+.form-footer {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+    text-align: center;
+}
+
+.auth-link {
+    color: #2d5a27;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-link:hover {
+    text-decoration: underline;
+}
+
+.form-note {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 1rem;
+    font-style: italic;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .empty-collection {
+        padding: 2rem 1rem;
+    }
+
+    .illustration-container {
+        width: 150px;
+        height: 150px;
+    }
+
+    .illustration-actions {
+        flex-direction: column;
+    }
+
+    .illustration-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .tips-list li {
+        font-size: 0.9rem;
+    }
+}

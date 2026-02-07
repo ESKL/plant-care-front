@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userPlantAPI } from '../../services/api';
+import EditPlantModal from './EditPlantModal';
 
-const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant, refreshPlant }) => { // Добавил refreshPlant в пропсы
+const UserPlantCard = ({
+                           plant,
+                           onWaterPlant,
+                           onUpdatePlant, // Добавлен пропс для обновления растения
+                           onRemovePlant,
+                           refreshPlant
+                       }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [showConfirm, setShowConfirm] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false); // Добавлено объявление
     const [localPlant, setLocalPlant] = useState(null);
-    const [justWatered, setJustWatered] = useState(false); // Флаг что только что полили
+    const [justWatered, setJustWatered] = useState(false);
     const navigate = useNavigate();
 
     // Инициализируем localPlant при получении пропса
@@ -19,6 +27,7 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant, refreshPlant }) => 
 
     const currentPlant = localPlant || plant;
 
+    // Функция для получения количества дней до полива
     const getDaysUntilWater = () => {
         if (!currentPlant || currentPlant.days_until_water === undefined || currentPlant.days_until_water === null) {
             return null;
@@ -26,6 +35,13 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant, refreshPlant }) => 
         return currentPlant.days_until_water;
     };
 
+    // Функция для определения, нужно ли поливать растение
+    const needsWatering = () => {
+        const daysUntilWater = getDaysUntilWater();
+        return daysUntilWater !== null && daysUntilWater <= 0;
+    };
+
+    // Функция для получения информации о поливе на основе days_until_water
     const getWateringInfo = () => {
         const daysUntilWater = getDaysUntilWater();
 
@@ -89,6 +105,7 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant, refreshPlant }) => 
         }
     };
 
+    // Функция для форматирования даты последнего полива
     const getLastWateredText = () => {
         if (!currentPlant || !currentPlant.last_watered_at) {
             return 'Никогда не поливалось';
@@ -156,6 +173,7 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant, refreshPlant }) => 
         }
     };
 
+    // Функция для получения даты следующего полива
     const getNextWateringText = () => {
         const daysUntilWater = getDaysUntilWater();
 
@@ -193,6 +211,7 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant, refreshPlant }) => 
         });
     };
 
+    // Функция для получения интервала полива
     const getWateringInterval = () => {
         if (currentPlant && currentPlant.watering_interval) {
             return currentPlant.watering_interval;
@@ -216,7 +235,7 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant, refreshPlant }) => 
     const handleWaterPlant = async () => {
         setLoading(true);
         setError('');
-        setJustWatered(true); // Устанавливаем флаг что только что полили
+        setJustWatered(true);
 
         try {
             await userPlantAPI.waterPlant(currentPlant.id);
@@ -226,7 +245,7 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant, refreshPlant }) => 
             const updatedPlant = {
                 ...currentPlant,
                 last_watered_at: now.toISOString(),
-                days_until_water: 0, // Показываем 0 дней до полива
+                days_until_water: 0,
             };
 
             setLocalPlant(updatedPlant);
@@ -254,26 +273,48 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant, refreshPlant }) => 
 
         } catch (err) {
             setError(err.response?.data?.message || 'Ошибка при поливе');
-            setJustWatered(false); // Сбрасываем флаг при ошибке
+            setJustWatered(false);
             setLoading(false);
         }
     };
 
-    const handleRemovePlant = async () => {
-        if (!window.confirm(`Удалить "${currentPlant.custom_name || currentPlant.name}" из коллекции?`)) {
-            return;
-        }
+    // Функция для обновления растения после редактирования
+    const handleUpdatePlant = (updatedData) => {
+        try {
+            // Обновляем локальное состояние
+            const updatedPlant = {
+                ...currentPlant,
+                ...updatedData,
+            };
 
+            setLocalPlant(updatedPlant);
+
+            // Уведомляем родительский компонент
+            if (onUpdatePlant) {
+                onUpdatePlant(currentPlant.id, updatedPlant);
+            }
+
+            setShowEditModal(false);
+        } catch (err) {
+            console.error('Ошибка обновления растения:', err);
+        }
+    };
+
+    const handleRemovePlant = async () => {
         setLoading(true);
         setError('');
+
         try {
-            await new Promise(resolve => setTimeout(resolve, 500));
+            // Используем реальный API эндпоинт для удаления
+            await userPlantAPI.deleteUserPlant(currentPlant.id);
+
+            // Уведомляем родительский компонент об успешном удалении
             if (onRemovePlant) {
                 onRemovePlant(currentPlant.id);
             }
+
         } catch (err) {
-            setError('Ошибка при удалении растения');
-        } finally {
+            setError(err.response?.data?.message || 'Ошибка при удалении растения');
             setLoading(false);
             setShowConfirm(false);
         }
@@ -290,174 +331,193 @@ const UserPlantCard = ({ plant, onWaterPlant, onRemovePlant, refreshPlant }) => 
     const isNeedsWatering = daysUntilWater !== null && daysUntilWater <= 0 && !justWatered;
 
     return (
-        <div className={`user-plant-card ${isNeedsWatering ? 'needs-watering' : ''} ${justWatered ? 'just-watered' : ''}`}>
-            <div className="plant-card-header">
-                <div className="watering-icon">{wateringInfo.icon}</div>
-                {isNeedsWatering && !justWatered && (
-                    <div className="watering-alert">⚠️ Требуется полив!</div>
-                )}
-                {justWatered && (
-                    <div className="watering-success">✅ Полито!</div>
-                )}
-                <div className="plant-card-actions">
-                    <button
-                        onClick={handleViewDetails}
-                        className="icon-button"
-                        title="Подробнее"
-                    >
-                        🔍
-                    </button>
-                    <button
-                        onClick={() => setShowConfirm(!showConfirm)}
-                        className="icon-button"
-                        title="Удалить"
-                    >
-                        ❌
-                    </button>
+        <>
+            <div className={`user-plant-card ${isNeedsWatering ? 'needs-watering' : ''} ${justWatered ? 'just-watered' : ''}`}>
+                <div className="plant-card-header">
+                    <div className="watering-icon">{wateringInfo.icon}</div>
+                    {isNeedsWatering && !justWatered && (
+                        <div className="watering-alert">⚠️ Требуется полив!</div>
+                    )}
+                    {justWatered && (
+                        <div className="watering-success">✅ Полито!</div>
+                    )}
+                    <div className="plant-card-actions">
+                        <button
+                            onClick={handleViewDetails}
+                            className="icon-button"
+                            title="Подробнее"
+                        >
+                            🔍
+                        </button>
+                        <button
+                            onClick={() => setShowEditModal(true)}
+                            className="icon-button"
+                            title="Редактировать"
+                        >
+                            ✏️
+                        </button>
+                        <button
+                            onClick={() => setShowConfirm(!showConfirm)}
+                            className="icon-button"
+                            title="Удалить"
+                        >
+                            ❌
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            <div className="plant-image-container">
-                {currentPlant && currentPlant.image_url ? (
-                    <img
-                        src={currentPlant.image_url}
-                        alt={currentPlant.custom_name || currentPlant.name || 'Растение'}
-                        className="plant-image"
+                <div className="plant-image-container">
+                    {currentPlant && currentPlant.image_url ? (
+                        <img
+                            src={currentPlant.image_url}
+                            alt={currentPlant.custom_name || currentPlant.name || 'Растение'}
+                            className="plant-image"
+                            onClick={handleViewDetails}
+                            onError={(e) => {
+                                e.target.style.display = 'none';
+                                e.target.parentNode.innerHTML = '<div class="plant-image-placeholder">🌿</div>';
+                            }}
+                        />
+                    ) : (
+                        <div
+                            className="plant-image-placeholder"
+                            onClick={handleViewDetails}
+                        >
+                            🌿
+                        </div>
+                    )}
+                    {isNeedsWatering && !justWatered && (
+                        <div className="watering-indicator">💧</div>
+                    )}
+                    {justWatered && (
+                        <div className="watering-success-indicator">✅</div>
+                    )}
+                </div>
+
+                <div className="plant-card-body">
+                    <h3
+                        className="plant-name"
                         onClick={handleViewDetails}
-                        onError={(e) => {
-                            e.target.style.display = 'none';
-                            e.target.parentNode.innerHTML = '<div class="plant-image-placeholder">🌿</div>';
-                        }}
-                    />
-                ) : (
-                    <div
-                        className="plant-image-placeholder"
-                        onClick={handleViewDetails}
+                        style={{ cursor: 'pointer' }}
                     >
-                        🌿
+                        {currentPlant ? (currentPlant.custom_name || currentPlant.name || 'Без названия') : 'Растение'}
+                    </h3>
+
+                    {currentPlant && currentPlant.custom_name && currentPlant.name && (
+                        <p className="plant-original-name">
+                            ({currentPlant.name})
+                        </p>
+                    )}
+
+                    <div className="watering-info-card">
+                        <div className="watering-status" style={{ color: wateringInfo.color }}>
+                            {wateringInfo.text}
+                        </div>
+
+                        {daysUntilWater !== null && (
+                            <div className="days-counter" data-status={wateringInfo.status}>
+                                <div className="days-number">{Math.abs(daysUntilWater)}</div>
+                                <div className="days-label">
+                                    {justWatered ? 'обновляется...' :
+                                        daysUntilWater >= 0 ? 'дней до полива' : 'дней просрочено'}
+                                </div>
+                            </div>
+                        )}
+
+                        <div className="watering-details">
+                            <div className="watering-detail">
+                                <span className="detail-label">Последний полив:</span>
+                                <span className="detail-value">{getLastWateredText()}</span>
+                            </div>
+                            <div className="watering-detail">
+                                <span className="detail-label">Следующий полив:</span>
+                                <span className="detail-value">{getNextWateringText()}</span>
+                            </div>
+                            <div className="watering-detail">
+                                <span className="detail-label">Интервал:</span>
+                                <span className="detail-value">{getWateringInterval()} дн.</span>
+                            </div>
+                        </div>
                     </div>
-                )}
-                {isNeedsWatering && !justWatered && (
-                    <div className="watering-indicator">💧</div>
-                )}
-                {justWatered && (
-                    <div className="watering-success-indicator">✅</div>
-                )}
-            </div>
 
-            <div className="plant-card-body">
-                <h3
-                    className="plant-name"
-                    onClick={handleViewDetails}
-                    style={{ cursor: 'pointer' }}
-                >
-                    {currentPlant ? (currentPlant.custom_name || currentPlant.name || 'Без названия') : 'Растение'}
-                </h3>
+                    {currentPlant && (currentPlant.light_preference || currentPlant.care_difficulty) && (
+                        <div className="plant-properties">
+                            {currentPlant.light_preference && (
+                                <div className="property">
+                                    <span className="property-icon">💡</span>
+                                    <span className="property-text">
+                    {currentPlant.light_preference === 'sun' ? 'Солнце' : 'Тень'}
+                  </span>
+                                </div>
+                            )}
+                            {currentPlant.care_difficulty && (
+                                <div className="property">
+                                    <span className="property-icon">⚡</span>
+                                    <span className="property-text">
+                    {currentPlant.care_difficulty === 'easy' ? 'Легко' :
+                        currentPlant.care_difficulty === 'medium' ? 'Средне' : 'Сложно'}
+                  </span>
+                                </div>
+                            )}
+                        </div>
+                    )}
 
-                {currentPlant && currentPlant.custom_name && currentPlant.name && (
-                    <p className="plant-original-name">
-                        ({currentPlant.name})
-                    </p>
-                )}
-
-                <div className="watering-info-card">
-                    <div className="watering-status" style={{ color: wateringInfo.color }}>
-                        {wateringInfo.text}
+                    <div className="plant-card-footer">
+                        <button
+                            onClick={handleWaterPlant}
+                            disabled={loading || justWatered}
+                            className={`water-button ${isNeedsWatering ? 'urgent' : ''} ${justWatered ? 'watered' : ''}`}
+                        >
+                            {loading ? '⏳ Поливаем...' :
+                                justWatered ? '✅ Полито!' :
+                                    '💦 Полить сейчас'}
+                            {daysUntilWater !== null && daysUntilWater > 0 && !justWatered && (
+                                <span className="button-days">({daysUntilWater} дн.)</span>
+                            )}
+                        </button>
                     </div>
 
-                    {daysUntilWater !== null && (
-                        <div className="days-counter" data-status={wateringInfo.status}>
-                            <div className="days-number">{Math.abs(daysUntilWater)}</div>
-                            <div className="days-label">
-                                {justWatered ? 'обновляется...' :
-                                    daysUntilWater >= 0 ? 'дней до полива' : 'дней просрочено'}
+                    {showConfirm && (
+                        <div className="confirm-delete">
+                            <p>Удалить "{currentPlant.custom_name || currentPlant.name}" из коллекции?</p>
+                            <p className="delete-warning">Это действие нельзя отменить.</p>
+                            <div className="confirm-buttons">
+                                <button
+                                    onClick={handleRemovePlant}
+                                    className="delete-confirm-button"
+                                    disabled={loading}
+                                >
+                                    {loading ? 'Удаление...' : 'Да, удалить'}
+                                </button>
+                                <button
+                                    onClick={() => setShowConfirm(false)}
+                                    className="cancel-button"
+                                    disabled={loading}
+                                >
+                                    Отмена
+                                </button>
                             </div>
                         </div>
                     )}
 
-                    <div className="watering-details">
-                        <div className="watering-detail">
-                            <span className="detail-label">Последний полив:</span>
-                            <span className="detail-value">{getLastWateredText()}</span>
+                    {error && <div className="error-message">{error}</div>}
+
+                    {currentPlant && currentPlant.created_at && (
+                        <div className="plant-added-date">
+                            Добавлено: {new Date(currentPlant.created_at).toLocaleDateString('ru-RU')}
                         </div>
-                        <div className="watering-detail">
-                            <span className="detail-label">Следующий полив:</span>
-                            <span className="detail-value">{getNextWateringText()}</span>
-                        </div>
-                        <div className="watering-detail">
-                            <span className="detail-label">Интервал:</span>
-                            <span className="detail-value">{getWateringInterval()} дн.</span>
-                        </div>
-                    </div>
+                    )}
                 </div>
-
-                {currentPlant && (currentPlant.light_preference || currentPlant.care_difficulty) && (
-                    <div className="plant-properties">
-                        {currentPlant.light_preference && (
-                            <div className="property">
-                                <span className="property-icon">💡</span>
-                                <span className="property-text">
-                  {currentPlant.light_preference === 'sun' ? 'Солнце' : 'Тень'}
-                </span>
-                            </div>
-                        )}
-                        {currentPlant.care_difficulty && (
-                            <div className="property">
-                                <span className="property-icon">⚡</span>
-                                <span className="property-text">
-                  {currentPlant.care_difficulty === 'easy' ? 'Легко' :
-                      currentPlant.care_difficulty === 'medium' ? 'Средне' : 'Сложно'}
-                </span>
-                            </div>
-                        )}
-                    </div>
-                )}
-
-                <div className="plant-card-footer">
-                    <button
-                        onClick={handleWaterPlant}
-                        disabled={loading || justWatered}
-                        className={`water-button ${isNeedsWatering ? 'urgent' : ''} ${justWatered ? 'watered' : ''}`}
-                    >
-                        {loading ? '⏳ Поливаем...' :
-                            justWatered ? '✅ Полито!' :
-                                '💦 Полить сейчас'}
-                        {daysUntilWater !== null && daysUntilWater > 0 && !justWatered && (
-                            <span className="button-days">({daysUntilWater} дн.)</span>
-                        )}
-                    </button>
-                </div>
-
-                {showConfirm && (
-                    <div className="confirm-delete">
-                        <p>Удалить растение из коллекции?</p>
-                        <div className="confirm-buttons">
-                            <button
-                                onClick={handleRemovePlant}
-                                className="delete-confirm-button"
-                                disabled={loading}
-                            >
-                                {loading ? 'Удаление...' : 'Да, удалить'}
-                            </button>
-                            <button
-                                onClick={() => setShowConfirm(false)}
-                                className="cancel-button"
-                            >
-                                Отмена
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                {error && <div className="error-message">{error}</div>}
-
-                {currentPlant && currentPlant.created_at && (
-                    <div className="plant-added-date">
-                        Добавлено: {new Date(currentPlant.created_at).toLocaleDateString('ru-RU')}
-                    </div>
-                )}
             </div>
-        </div>
+
+            {showEditModal && (
+                <EditPlantModal
+                    plant={currentPlant}
+                    onClose={() => setShowEditModal(false)}
+                    onUpdate={handleUpdatePlant}
+                />
+            )}
+        </>
     );
 };
 

@@ -19,6 +19,8 @@ import AdminPanel from './components/Admin/AdminPanel';
 import AddPlantForm from './components/Admin/AddPlantForm';
 import './App.css';
 import AdminRoute from "./components/Layout/AdminRoute";
+import ManagePlants from './components/Admin/ManagePlants';
+import FullStats from './components/Admin/FullStats';
 
 function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -108,6 +110,18 @@ function App() {
                         <Route path="/admin/add-plant" element={
                             <AdminRoute>
                                 <AddPlantForm />
+                            </AdminRoute>
+                        } />
+
+                        <Route path="/admin/manage-plants" element={
+                            <AdminRoute>
+                                <ManagePlants />
+                            </AdminRoute>
+                        } />
+
+                        <Route path="/admin/full-stats" element={
+                            <AdminRoute>
+                                <FullStats />
                             </AdminRoute>
                         } />
 

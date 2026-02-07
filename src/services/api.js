@@ -28,6 +28,8 @@ export const userPlantAPI = {
     getUserPlants: () => api.get('/my-plants'),
     addUserPlant: (data) => api.post('/my-plants', data),
     waterPlant: (id) => api.post(`/water-plant/${id}`),
+    updateUserPlant: (id, data) => api.put(`/my-plants/${id}`, data),
+    deleteUserPlant: (id) => api.delete(`/my-plants/${id}`),
 };
 
 // notificationAPI
@@ -71,7 +73,8 @@ export const plantAPI = {
 
 export const adminAPI = {
     addPlantToLibrary: (data) => api.post('/admin/add-plant', data),
-    // Можно добавить другие админские методы позже
+    updatePlantInLibrary: (id, data) => api.put(`/admin/plant/${id}`, data),
+    deletePlantFromLibrary: (id) => api.delete(`/admin/plant/${id}`),
 };
 
 

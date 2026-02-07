@@ -4,11 +4,11 @@ import { plantAPI, userPlantAPI } from '../../services/api';
 import PlantCard from './PlantCard';
 
 const PlantLibrary = () => {
-    const [plants, setPlants] = useState([]); // Начинаем с пустого массива
+    const [plants, setPlants] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [addingPlantId, setAddingPlantId] = useState(null);
-    const [customName, setCustomName] = useState('');
+    const [customNames, setCustomNames] = useState({}); // Храним имена для каждого растения
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,7 +18,6 @@ const PlantLibrary = () => {
     const fetchPlants = async () => {
         try {
             const response = await plantAPI.getAllPlants();
-            // Убедимся, что всегда получаем массив
             setPlants(response.data || []);
         } catch (err) {
             setError('Ошибка загрузки растений: ' + (err.message || ''));
@@ -27,16 +26,32 @@ const PlantLibrary = () => {
         }
     };
 
+    const handleCustomNameChange = (plantId, value) => {
+        setCustomNames(prev => ({
+            ...prev,
+            [plantId]: value
+        }));
+    };
+
     const handleAddToCollection = async (plantId) => {
         setAddingPlantId(plantId);
         try {
+            const customName = customNames[plantId] || '';
+
             await userPlantAPI.addUserPlant({
                 plant_library_id: plantId,
-                custom_name: customName || undefined,
+                custom_name: customName.trim() || undefined,
                 image_url: undefined,
             });
+
             alert('Растение добавлено в коллекцию!');
-            setCustomName('');
+
+            // Очищаем поле ввода для этого растения
+            setCustomNames(prev => ({
+                ...prev,
+                [plantId]: ''
+            }));
+
             // Перенаправляем на страницу моих растений
             navigate('/my-plants');
         } catch (err) {
@@ -74,10 +89,10 @@ const PlantLibrary = () => {
                                 <input
                                     type="text"
                                     placeholder="Дайте своё имя растению (необязательно)"
-                                    value={addingPlantId === plant.id ? customName : ''}
-                                    onChange={(e) => setCustomName(e.target.value)}
-                                    onFocus={() => setCustomName(plant.custom_name || '')}
+                                    value={customNames[plant.id] || ''}
+                                    onChange={(e) => handleCustomNameChange(plant.id, e.target.value)}
                                     className="custom-name-input"
+                                    disabled={addingPlantId === plant.id}
                                 />
                                 <button
                                     onClick={() => handleAddToCollection(plant.id)}

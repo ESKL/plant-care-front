@@ -3668,3 +3668,146 @@ button:disabled {
         font-size: 0.9rem;
     }
 }
+
+/* Стили для поиска в библиотеке */
+.search-container {
+    position: relative;
+    margin: 20px 0 30px;
+    max-width: 800px;
+}
+
+.library-search {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.search-input {
+    width: 100%;
+    padding: 12px 50px 12px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
+}
+
+.clear-search-button {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #e0e0e0;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #666;
+    transition: all 0.2s ease;
+}
+
+.clear-search-button:hover {
+    background: #d32f2f;
+    color: white;
+}
+
+.search-results-info {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #666;
+    padding-left: 5px;
+}
+
+.search-results-info strong {
+    color: #4CAF50;
+}
+
+/* Заголовок результатов поиска */
+.search-results-header {
+    background: linear-gradient(135deg, #f8f9fa, #e8f5e9);
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 4px solid #4CAF50;
+}
+
+.search-results-header h3 {
+    margin: 0 0 5px 0;
+    color: #2E7D32;
+}
+
+.search-results-header p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.search-results-header strong {
+    color: #4CAF50;
+}
+
+/* Кнопка очистки поиска при пустых результатах */
+.clear-search-action-button {
+    padding: 10px 20px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+.clear-search-action-button:hover {
+    background: #388E3C;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+/* Стили для пустой библиотеки после поиска */
+.empty-library {
+    text-align: center;
+    padding: 40px 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    margin: 20px 0;
+}
+
+.empty-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #ccc;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .search-container {
+        margin: 15px 0;
+    }
+
+    .library-search {
+        padding: 12px 15px;
+    }
+
+    .search-input {
+        padding: 10px 40px 10px 15px;
+        font-size: 14px;
+    }
+
+    .clear-search-button {
+        right: 20px;
+    }
+}
